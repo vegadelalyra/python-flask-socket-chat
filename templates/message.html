@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script
+            src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+            integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+            crossorigin="anonymous"></script>
+        <title>Document</title>
+    </head>
+    <body>
+        <div class="messages">
+            <input placeholder="Message" type="text" id="messageInput" />
+        </div>
+
+        <script>
+            const socket = io()
+
+            let messageContainer = document.querySelector('.messages')
+
+            socket.on('connect', () => {
+                let p = document.createElement('p')
+                p.innerText = "You're connected!"
+                messageContainer.appendChild(p)
+            })
+
+            let messageInput = document.getElementById('messageInput')
+            messageInput.addEventListener('keypress', e => {
+                if (e.which === 13) {
+                    socket.emit('message', messageInput.value)
+                    messageInput.value = ''
+                }
+            })
+
+            socket.on('message', message => {
+                let messageElement = document.createElement('p')
+                messageElement.innerText = message
+                messageContainer.appendChild(messageElement)
+            })
+        </script>
+    </body>
+</html>
